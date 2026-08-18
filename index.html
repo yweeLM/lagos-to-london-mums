@@ -250,62 +250,53 @@
 
     <form id="checkin-form" class="desk">
       <div class="field-grid">
-        <div class="field full">
-          <label for="name">First and last name</label>
-          <input type="text" id="name" name="name" placeholder="e.g. Adaeze Okonkwo" required>
+        <div class="field">
+          <label for="first_name">First name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="e.g. Adaeze" required>
+        </div>
+        <div class="field">
+          <label for="last_name">Last name</label>
+          <input type="text" id="last_name" name="last_name" placeholder="e.g. Okonkwo" required>
         </div>
 
-        <div class="field">
-          <label for="location">City &amp; country you live in now</label>
+        <div class="field full">
+          <label for="location">Country &amp; city you live in now</label>
           <input type="text" id="location" name="location" placeholder="e.g. Croydon, UK" required>
         </div>
-        <div class="field">
-          <label for="moved_from">Where you moved from</label>
-          <input type="text" id="moved_from" name="moved_from" placeholder="e.g. Lagos, Nigeria" required>
-        </div>
 
         <div class="field">
-          <label for="moved_when">When you moved</label>
-          <input type="text" id="moved_when" name="moved_when" placeholder="e.g. September 2022" required>
+          <label for="moved_when">When you moved <span class="opt">(optional)</span></label>
+          <input type="text" id="moved_when" name="moved_when" placeholder="e.g. September 2022">
         </div>
         <div class="field">
-          <label for="children">Number &amp; age of children <span class="opt">(optional)</span></label>
-          <input type="text" id="children" name="children" placeholder="e.g. 2 — ages 4 and 7">
-        </div>
-
-        <div class="field">
-          <label for="hobby">One hobby of yours</label>
-          <input type="text" id="hobby" name="hobby" placeholder="e.g. Ankara sewing, tennis, Afrobeats playlists">
-        </div>
-        <div class="field">
-          <label for="work">What you do for work</label>
+          <label for="work">What you do for work <span class="opt">(optional)</span></label>
           <input type="text" id="work" name="work" placeholder="e.g. NHS nurse, own a business, studying">
         </div>
 
         <div class="field full">
-          <label for="surprise">What surprised you most about moving?</label>
-          <textarea id="surprise" name="surprise" placeholder="The weather, the pace, the paperwork — tell us"></textarea>
+          <label for="children_ages">Age range(s) of your children <span class="opt">(optional — select all that apply, or N/A)</span></label>
+          <select id="children_ages" name="children_ages" multiple size="6">
+            <option value="0-5">0 – 5</option>
+            <option value="6-12">6 – 12</option>
+            <option value="13-16">13 – 16</option>
+            <option value="17-25">17 – 25</option>
+            <option value="26+">26 and above</option>
+            <option value="N/A">N/A</option>
+          </select>
         </div>
 
         <div class="field">
-          <label>Have you joined any of our virtual hangouts?</label>
-          <div class="radio-row">
-            <label><input type="radio" name="hangout" value="Yes" required> Yes</label>
-            <label><input type="radio" name="hangout" value="No" required> No</label>
-          </div>
+          <label for="hobby">One hobby of yours <span class="opt">(optional)</span></label>
+          <input type="text" id="hobby" name="hobby" placeholder="e.g. Ankara sewing, tennis, Afrobeats playlists">
         </div>
         <div class="field">
-          <label>Are your children in boarding or day school?</label>
-          <div class="radio-row">
-            <label><input type="radio" name="schooling" value="Day"> Day</label>
-            <label><input type="radio" name="schooling" value="Boarding"> Boarding</label>
-            <label><input type="radio" name="schooling" value="N/A"> N/A</label>
-          </div>
+          <label for="referral">How did you find out about this community?</label>
+          <input type="text" id="referral" name="referral" placeholder="e.g. Instagram, or referred by Chioma A." required>
         </div>
 
         <div class="field full">
-          <label for="referral">How did you find out about this community? <span class="opt">(full name of referral, if any)</span></label>
-          <input type="text" id="referral" name="referral" placeholder="e.g. Instagram, or referred by Chioma A.">
+          <label for="surprise">What surprised you most about moving?</label>
+          <textarea id="surprise" name="surprise" placeholder="The weather, the pace, the paperwork — tell us" required></textarea>
         </div>
 
         <div class="field full">
@@ -355,7 +346,12 @@
     submitBtn.disabled = true;
     submitBtn.textContent = "Checking in…";
 
-    const data = Object.fromEntries(new FormData(form).entries());
+    const formData = new FormData(form);
+    const data = {};
+    for (const key of new Set(formData.keys())) {
+      const values = formData.getAll(key);
+      data[key] = values.length > 1 ? values.join(", ") : values[0];
+    }
 
     try {
       const res = await fetch("/api/checkin", {
