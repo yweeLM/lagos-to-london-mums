@@ -1,7 +1,7 @@
-const REQUIRED_FIELDS = ["name", "location", "moved_from", "moved_when", "hangout"];
+const REQUIRED_FIELDS = ["first_name", "last_name", "location", "surprise", "referral"];
 const ALL_FIELDS = [
-  "name", "location", "moved_from", "moved_when", "children",
-  "hobby", "work", "surprise", "hangout", "schooling", "referral", "more"
+  "first_name", "last_name", "location", "moved_when", "children_ages",
+  "work", "hobby", "surprise", "referral", "more"
 ];
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/mgawpzpb";
