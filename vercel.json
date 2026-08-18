@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/community", "destination": "/api/community" }
+  ]
+}
